@@ -166,7 +166,7 @@ function createRoom(data){
 }
 
 if(initialized == false){
-  var classes = require("./classes.json");
+  var classes = require("./classes.json").slice(0,10)
   classes.forEach(function(elm){
     createRoom(elm.name);
   });

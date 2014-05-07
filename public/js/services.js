@@ -9,7 +9,7 @@ app.constant('geolocation_msgs', {
 });
 
 app.factory('socket', function ($rootScope) {
-  var socket = io.connect('/');
+  var socket = io.connect(window.location.hostname);
   if (socket.socket.connected === false) {
     $rootScope.status = 'offline';
   }
