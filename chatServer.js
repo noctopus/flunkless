@@ -10,7 +10,10 @@ module.exports = function(server) {
   , io = require('socket.io').listen(server)
   , utils = require('./utils/utils')
   , purgatory = require('./utils/purge');
+  var initialized = false;
   io.set('log level', 1);
+
+
 
   io.sockets.on('connection', function (socket) {
     //on every connection count the number of people already online and broadcast message to all clients
@@ -130,14 +133,25 @@ socket.on('createRoom', function(data) {
         flag = true;
       }
       if (!flag) {
-        var roomName = data;
+            createRoom(data);
+          }
+        }
+      }
+    });
+
+function createRoom(data){
+          var roomName = data;
         if (roomName.length !== 0) {
               var uniqueRoomID = uuid.v4() //guarantees uniquness of room
               , room = new Room(roomName, uniqueRoomID, socket.id);
-              people[socket.id].owns = uniqueRoomID; //set ownership of room
-              people[socket.id].inroom = uniqueRoomID; //assign user to room in people object
-              people[socket.id].roomname = roomName;
-              room.addPerson(socket.id);
+
+              if(people[socket.id] != null){
+                people[socket.id].owns = uniqueRoomID; //set ownership of room
+                people[socket.id].inroom = uniqueRoomID; //assign user to room in people object
+                people[socket.id].roomname = roomName;
+                room.addPerson(socket.id);
+              }
+              
               rooms[uniqueRoomID] = room;
               socket.room = roomName;
               socket.join(socket.room);
@@ -145,13 +159,19 @@ socket.on('createRoom', function(data) {
               utils.sendToAllConnectedClients(io, 'updateRoomsCount', {count: totalRooms});
               utils.sendToAllConnectedClients(io,'listAvailableChatRooms', rooms);
               utils.sendToAllConnectedClients(io, 'updateUserDetail', people);
-              utils.sendToSelf(socket, 'sendUserDetail', people[socket.id]);
+              if(people[socket.id] != null)
+                utils.sendToSelf(socket, 'sendUserDetail', people[socket.id]);
               chatHistory[socket.room] = []; //initiate chat history
             }
-          }
-        }
-      }
-    });
+}
+
+if(initialized == false){
+  var classes = require("./classes.json");
+  classes.forEach(function(elm){
+    createRoom(elm.name);
+  });
+  initialized=true;
+}
 
 socket.on('joinRoom', function(id) {
   var flag = false;

@@ -1,0 +1,155 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install' ]
+2 info using npm@1.3.24
+3 info using node@v0.10.25
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 info shrinkwrap file "C:\\Users\\Reginald\\Desktop\\CSE121\\AngularChat\\npm-shrinkwrap.json"
+6 verbose readDependencies returned deps { ejs: '0.8.5',
+6 verbose readDependencies returned deps   express: '3.4.8',
+6 verbose readDependencies returned deps   'node-uuid': '1.4.1',
+6 verbose readDependencies returned deps   nodemon: '1.0.13',
+6 verbose readDependencies returned deps   'socket.io': '0.9.16',
+6 verbose readDependencies returned deps   shrinkwrap: '0.0.3',
+6 verbose readDependencies returned deps   underscore: '1.5.2',
+6 verbose readDependencies returned deps   bower: '1.2.8' }
+7 verbose install where, deps [ 'C:\\Users\\Reginald\\Desktop\\CSE121\\AngularChat',
+7 verbose install   [ 'ejs',
+7 verbose install     'express',
+7 verbose install     'node-uuid',
+7 verbose install     'nodemon',
+7 verbose install     'socket.io',
+7 verbose install     'shrinkwrap',
+7 verbose install     'underscore',
+7 verbose install     'bower' ] ]
+8 info preinstall AngularChat@0.9.0
+9 info shrinkwrap file "C:\\Users\\Reginald\\Desktop\\CSE121\\AngularChat\\npm-shrinkwrap.json"
+10 verbose readDependencies returned deps { ejs: '0.8.5',
+10 verbose readDependencies returned deps   express: '3.4.8',
+10 verbose readDependencies returned deps   'node-uuid': '1.4.1',
+10 verbose readDependencies returned deps   nodemon: '1.0.13',
+10 verbose readDependencies returned deps   'socket.io': '0.9.16',
+10 verbose readDependencies returned deps   shrinkwrap: '0.0.3',
+10 verbose readDependencies returned deps   underscore: '1.5.2',
+10 verbose readDependencies returned deps   bower: '1.2.8' }
+11 verbose already installed skipping ejs@0.8.5 C:\Users\Reginald\Desktop\CSE121\AngularChat
+12 verbose already installed skipping express@3.4.8 C:\Users\Reginald\Desktop\CSE121\AngularChat
+13 verbose already installed skipping node-uuid@1.4.1 C:\Users\Reginald\Desktop\CSE121\AngularChat
+14 verbose already installed skipping nodemon@1.0.13 C:\Users\Reginald\Desktop\CSE121\AngularChat
+15 verbose already installed skipping socket.io@0.9.16 C:\Users\Reginald\Desktop\CSE121\AngularChat
+16 verbose already installed skipping shrinkwrap@0.0.3 C:\Users\Reginald\Desktop\CSE121\AngularChat
+17 verbose already installed skipping underscore@1.5.2 C:\Users\Reginald\Desktop\CSE121\AngularChat
+18 verbose already installed skipping bower@1.2.8 C:\Users\Reginald\Desktop\CSE121\AngularChat
+19 silly resolved []
+20 info build C:\Users\Reginald\Desktop\CSE121\AngularChat
+21 verbose linkStuff [ false, false, false, 'C:\\Users\\Reginald\\Desktop\\CSE121' ]
+22 info linkStuff AngularChat@0.9.0
+23 verbose linkBins AngularChat@0.9.0
+24 verbose linkMans AngularChat@0.9.0
+25 verbose rebuildBundles AngularChat@0.9.0
+26 verbose rebuildBundles [ '.bin',
+26 verbose rebuildBundles   '.gitkeep',
+26 verbose rebuildBundles   'bower',
+26 verbose rebuildBundles   'ejs',
+26 verbose rebuildBundles   'express',
+26 verbose rebuildBundles   'node-uuid',
+26 verbose rebuildBundles   'nodemon',
+26 verbose rebuildBundles   'shrinkwrap',
+26 verbose rebuildBundles   'socket.io',
+26 verbose rebuildBundles   'underscore' ]
+27 verbose rebuild bundle C:\Users\Reginald\Desktop\CSE121\AngularChat\node_modules\bower
+28 info build C:\Users\Reginald\Desktop\CSE121\AngularChat\node_modules\bower
+29 info preinstall bower@1.2.8
+30 verbose linkStuff [ false,
+30 verbose linkStuff   false,
+30 verbose linkStuff   false,
+30 verbose linkStuff   'C:\\Users\\Reginald\\Desktop\\CSE121\\AngularChat\\node_modules' ]
+31 info linkStuff bower@1.2.8
+32 warn prefer global bower@1.2.8 should be installed with -g
+33 verbose linkBins bower@1.2.8
+34 verbose link bins [ { bower: 'bin/bower' },
+34 verbose link bins   'C:\\Users\\Reginald\\Desktop\\CSE121\\AngularChat\\node_modules\\.bin',
+34 verbose link bins   false ]
+35 verbose linkMans bower@1.2.8
+36 verbose rebuildBundles bower@1.2.8
+37 verbose rebuildBundles [ '.bin',
+37 verbose rebuildBundles   'abbrev',
+37 verbose rebuildBundles   'archy',
+37 verbose rebuildBundles   'bower-config',
+37 verbose rebuildBundles   'bower-endpoint-parser',
+37 verbose rebuildBundles   'bower-json',
+37 verbose rebuildBundles   'bower-logger',
+37 verbose rebuildBundles   'bower-registry-client',
+37 verbose rebuildBundles   'cardinal',
+37 verbose rebuildBundles   'chalk',
+37 verbose rebuildBundles   'chmodr',
+37 verbose rebuildBundles   'decompress-zip',
+37 verbose rebuildBundles   'fstream',
+37 verbose rebuildBundles   'fstream-ignore',
+37 verbose rebuildBundles   'glob',
+37 verbose rebuildBundles   'graceful-fs',
+37 verbose rebuildBundles   'handlebars',
+37 verbose rebuildBundles   'inquirer',
+37 verbose rebuildBundles   'junk',
+37 verbose rebuildBundles   'lru-cache',
+37 verbose rebuildBundles   'mkdirp',
+37 verbose rebuildBundles   'mout',
+37 verbose rebuildBundles   'nopt',
+37 verbose rebuildBundles   'open',
+37 verbose rebuildBundles   'osenv',
+37 verbose rebuildBundles   'p-throttler',
+37 verbose rebuildBundles   'promptly',
+37 verbose rebuildBundles   'q',
+37 verbose rebuildBundles   'request',
+37 verbose rebuildBundles   'request-progress',
+37 verbose rebuildBundles   'retry',
+37 verbose rebuildBundles   'rimraf',
+37 verbose rebuildBundles   'semver',
+37 verbose rebuildBundles   'stringify-object',
+37 verbose rebuildBundles   'sudo-block',
+37 verbose rebuildBundles   'tar',
+37 verbose rebuildBundles   'tmp',
+37 verbose rebuildBundles   'update-notifier',
+37 verbose rebuildBundles   'which' ]
+38 info install bower@1.2.8
+39 info postinstall bower@1.2.8
+40 verbose rebuild bundle C:\Users\Reginald\Desktop\CSE121\AngularChat\node_modules\nodemon
+41 info build C:\Users\Reginald\Desktop\CSE121\AngularChat\node_modules\nodemon
+42 info preinstall nodemon@1.0.13
+43 verbose linkStuff [ false,
+43 verbose linkStuff   false,
+43 verbose linkStuff   false,
+43 verbose linkStuff   'C:\\Users\\Reginald\\Desktop\\CSE121\\AngularChat\\node_modules' ]
+44 info linkStuff nodemon@1.0.13
+45 warn prefer global nodemon@1.0.13 should be installed with -g
+46 verbose linkBins nodemon@1.0.13
+47 verbose link bins [ { nodemon: './bin/nodemon.js' },
+47 verbose link bins   'C:\\Users\\Reginald\\Desktop\\CSE121\\AngularChat\\node_modules\\.bin',
+47 verbose link bins   false ]
+48 verbose linkMans nodemon@1.0.13
+49 verbose rebuildBundles nodemon@1.0.13
+50 verbose rebuildBundles [ 'minimatch', 'update-notifier' ]
+51 info install nodemon@1.0.13
+52 info postinstall nodemon@1.0.13
+53 info install AngularChat@0.9.0
+54 info postinstall AngularChat@0.9.0
+55 verbose unsafe-perm in lifecycle true
+56 info AngularChat@0.9.0 Failed to exec postinstall script
+57 error AngularChat@0.9.0 postinstall: `export HOME=/var/lib/openshift/532227e85973ca652100009e/app-root/runtime/repo; ./node_modules/bower/bin/bower install`
+57 error Exit status 1
+58 error Failed at the AngularChat@0.9.0 postinstall script.
+58 error This is most likely a problem with the AngularChat package,
+58 error not with npm itself.
+58 error Tell the author that this fails on your system:
+58 error     export HOME=/var/lib/openshift/532227e85973ca652100009e/app-root/runtime/repo; ./node_modules/bower/bin/bower install
+58 error You can get their info via:
+58 error     npm owner ls AngularChat
+58 error There is likely additional logging output above.
+59 error System Windows_NT 6.2.9200
+60 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install"
+61 error cwd C:\Users\Reginald\Desktop\CSE121\AngularChat
+62 error node -v v0.10.25
+63 error npm -v 1.3.24
+64 error code ELIFECYCLE
+65 verbose exit [ 1, true ]
