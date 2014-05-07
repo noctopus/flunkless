@@ -19,6 +19,6 @@ app.configure(function() {
 
 app.get('/', routes.index);
 
-server.listen(app.get('port'), app.get('ipaddr'), function(){
+server.listen(app.get('port'), function(){
   console.log('Express server listening on IP/hostname: "' + app.get('ipaddr') + '" and port: "' + app.get('port') + '"');
 });

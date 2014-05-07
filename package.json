@@ -4,6 +4,7 @@
   "description": "Chat application using node.js, socket.io and AngularJS",
   "main": "app.js",
   "dependencies": {
+    "bower": "0.6.x",
     "ejs": "~0.8.5",
     "express": "~3.4.8",
     "node-uuid": "~1.4.1",
