@@ -12,9 +12,6 @@
     "underscore": "~1.5.2"
   },
   "devDependencies": {},
-  "scripts": {
-    "postinstall": "export HOME=/var/lib/openshift/532227e85973ca652100009e/app-root/runtime/repo; ./node_modules/bower/bin/bower install"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/tamaspiros/AngularChat.git"
