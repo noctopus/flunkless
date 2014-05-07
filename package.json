@@ -1,5 +1,5 @@
 {
-  "name": "AngularChat",
+  "name": "FlunkLess",
   "version": "0.9.0",
   "description": "Chat application using node.js, socket.io and AngularJS",
   "main": "app.js",
@@ -18,12 +18,9 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/tamaspiros/AngularChat.git"
+    "url": "https://github.com/aly006/FlunkLess.git"
   },
-  "author": "Tamas Piros <me@tamas.io>",
+  "author": "Thomas Nguyen, Kandice Wong, Alex Yang",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/tamaspiros/AngularChat/issues"
-  },
-  "homepage": "https://github.com/tamaspiros/AngularChat"
+  "homepage": "http://flunkless0.herokuapp.com
 }

@@ -129,7 +129,6 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
   }
 
   $scope.contextSwitch = function(room){
-    alert(room.name + " SWITCHING")
   }
 
   $scope.addRoom = function(room){
