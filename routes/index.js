@@ -1,3 +1,4 @@
 exports.index = function(req, res) {
- res.render('index.html');
+	console.log("REDNERING HERE");
+ res.render('index2.html');
 };

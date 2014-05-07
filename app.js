@@ -15,7 +15,6 @@ var express = require('express')
   app.set('view engine', 'ejs');
 
   app.get('/', routes.index);
-
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
