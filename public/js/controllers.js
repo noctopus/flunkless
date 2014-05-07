@@ -11,6 +11,8 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
   $scope.username = '';
   $scope.joined = false;
   $scope.loading=false;
+  $scope.addedRooms = [];
+  $scope.create=false;
   var typing = false;
   var timeout  = undefined;
 
@@ -126,15 +128,37 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
     }
   }
 
+  $scope.contextSwitch = function(room){
+    alert(room.name + " SWITCHING")
+  }
+
+  $scope.addRoom = function(room){
+    $scope.addedRooms.unshift(room);
+    var roomTab = $("<li><a href='#currentRoom'>"+room.name.slice(0,8) + "</a></li>");
+    roomTab.click(function(){
+      $scope.contextSwitch(room);
+      $scope.leaveRoom($scope.currentRoom);
+      $scope.joinRoom(room);
+      $scope.$apply(function(){
+        $scope.create=false;
+        roomTab.addClass("active");
+      });
+      
+    });
+    $("#classtabs").prepend(roomTab).tabcontrol();
+  }
+
   $scope.joinRoom = function(room) {
     $scope.messages = [];
     $scope.error.create = '';
     $scope.message = '';
     socket.emit('joinRoom', room.id);
+    $scope.currentRoom = room;
   }
 
   $scope.leaveRoom = function(room) {
     $scope.message = '';
+    if(room != null)
     socket.emit('leaveRoom', room.id);
   }
 

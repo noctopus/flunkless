@@ -37,15 +37,14 @@
       </div>
       <div ng-hide="!joined" ng-cloak>
       <div class="tab-control" data-role="tab-control">
-      <ul class="tabs">
-         <li class="active"><a href="#cogs121">COGS 121 (X)</a></li>
-         <li><a href="#addroom">Add/Create a Room</a></li>
+      <ul class="tabs" id="classtabs">
+         <li><a ng-click="create=true">Add/Create a Room</a></li>
       </ul>
-      <div class="frames" >
-
-      <div class="frame" id="addroom">
+      <div >
+      <div id="addroom" ng-show="create || addedRooms.length==0 || currentRoom == null">
          <div id="createroom">
             <form class="form-inline" role="form" ng-hide="user.owns && user.inroom">
+              <p class="subheader">Name your room </p>
                <div class="form-group">
                   <label class="sr-only" for="roomname">Room name: </label>
                   <input type="text" placeholder="Enter room name" class="form-control" ng-model="roomname" name="roomname" id="roomname">
@@ -56,13 +55,12 @@
          </div>
           <ul>
               <li ng-repeat="room in rooms" ng-cloak>
-                <form class="form-inline" role="form"><div class="form-group"><p class="white">{{ room.name }}</p></div><button class="btn btn-success btn-xs" type="submit" ng-click='joinRoom(room)' ng-hide='room.id === user.owns || room.id === user.inroom || user.owns || user.inroom'>Join</button>
-                <button type="submit" ng-click="leaveRoom(room)" class="btn btn-xs btn-info" ng-hide='room.id === user.owns || !user.inroom || user.owns || user.inroom !== room.id'>Leave</button></form>
+                <form class="form-inline" role="form"><div class="form-group"><p class="white">{{ room.name }}</p></div><button class="btn btn-success btn-xs" type="submit" ng-click='addRoom(room)' >Add Room</button></form>
                 </li>
           </ul>
       </div>
 
-      <div class="frame" id="cogs121" style="padding:0px; margin-left:25px;">
+      <div id="currentRoom" style="padding:0px; margin-left:25px;" ng-hide="create || currentRoom == null">
          <div class="grid">
             <div class="row" style="height:100%">
                <div class="span10 tile quadro-vertical" >
