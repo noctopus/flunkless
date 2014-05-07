@@ -4,8 +4,7 @@ var express = require('express')
 , routes = require('./routes')
 , chatServer =require('./chatServer')(server);
 
-app.configure(function() {
-  app.set('port', process.env.PORT || 3001);
+  app.set('port', process.env.PORT || 3000);
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.static(__dirname + '/public'));
@@ -14,9 +13,8 @@ app.configure(function() {
   app.use('/icons', express.static(__dirname + '/icons'));
   app.use(app.router);
   app.set('view engine', 'ejs');
-});
 
-app.get('/', routes.index);
+  app.get('/', routes.index);
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
