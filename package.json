@@ -12,6 +12,9 @@
     "socket.io": "~0.9.16",
     "underscore": "~1.5.2"
   },
+  "scripts": {
+    "start": "node app.js"
+  },
   "devDependencies": {},
   "repository": {
     "type": "git",
