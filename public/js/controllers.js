@@ -10,6 +10,7 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
   $scope.typingPeople = [];
   $scope.username = '';
   $scope.joined = false;
+  $scope.loading=false;
   var typing = false;
   var timeout  = undefined;
 
@@ -69,6 +70,7 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
     if ($scope.user.name.length === 0) {
       $scope.error.join ='Please enter a username';
     } else {
+      $scope.loading=true;
       var usernameExists = false;
       socket.emit('checkUniqueUsername', $scope.user.name, function(data) {
         usernameExists = data.result;
@@ -76,11 +78,13 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
           $scope.error.join = 'Username ' + $scope.user.name + ' already exists.';
           socket.emit('suggest', $scope.user.name, function(data) {
             $scope.suggestedUsername = data.suggestedUsername;
+            $scope.loading=false;
           });
         } else {
           socket.emit('joinSocketServer', {name: $scope.user.name});
           $scope.joined = true;
           $scope.error.join = '';
+          $scope.loading=false;
         }
       });
     }
