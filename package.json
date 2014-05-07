@@ -1,0 +1,30 @@
+{
+  "name": "FlunkLess",
+  "version": "0.0.1",
+  "description": "Chat application using node.js, socket.io and AngularJS",
+  "main": "app.js",
+  "dependencies": {
+    "ejs": "~0.8.5",
+    "express": "~3.4.8",
+    "node-uuid": "~1.4.1",
+    "shrinkwrap": "~0.0.3",
+    "socket.io": "~0.9.16",
+    "underscore": "~1.5.2",
+    "bower": "~1.2.8",
+    "nodemon": "~1.0.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tamaspiros/AngularChat.git"
+  },
+  "author": "Alex Yang, Thomas Nguyen, Kandice Wong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tamaspiros/AngularChat/issues"
+  },
+  "homepage": "https://github.com/tamaspiros/AngularChat"
+}
