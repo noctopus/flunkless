@@ -1,6 +1,7 @@
 'use strict';
 
 function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
+  console.log("IN CHAT APP")
   $scope.peopleCount = 0;
   $scope.messages = [];
   $scope.user = {}; //holds information about the current user
@@ -12,6 +13,7 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
   $scope.joined = false;
   $scope.loading=false;
   $scope.addedRooms = [];
+  $scope.peopleOnline = [];
   $scope.create=false;
   var typing = false;
   var timeout  = undefined;
@@ -192,6 +194,16 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
       $scope.messages.push(messages);
     });
   });
+
+  socket.on('peopleOnline', function(data){
+    console.log(data.room);
+    console.log($scope.currentRoom.id);
+    console.log(data.room.localeCompare($scope.currentRoom.id))
+    if(data.room.localeCompare($scope.currentRoom.id) >= 0){
+        $scope.peopleOnline = data.people;
+        console.log($scope.peopleOnline);
+    }
+  })
 
   socket.on('connectingToSocketServer', function(data) {
     $scope.status = data.status;

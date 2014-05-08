@@ -109,19 +109,11 @@
                </div>
                <fieldset class="span4 tile quadro-vertical">
                   <legend>People Online</legend>
-                  <div class="listview-outlook">
+                  <div class="listview-outlook" ng-repeat="name in peopleOnline">
                      <a href="#" class="list">
-                        <div class="list-content">Nadir Weibel</div>
+                        <div class="list-content" >{{name}}</div>
                      </a>
-                     <a href="#" class="list">
-                        <div class="list-content">Thomas</div>
-                     </a>
-                     <a href="#" class="list">
-                        <div class="list-content">Kandice</div>
-                     </a>
-                     <a href="#" class="list">
-                        <div class="list-content">Alex</div>
-                     </a>
+                    
                   </div>
                </fieldset>
             </div>

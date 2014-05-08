@@ -173,7 +173,6 @@ if(initialized == false){
   var classes = require("./classes.json")
   classes.forEach(function(elm){
     createRoom(elm.name);
-    console.log(elm.name + " created!");
   });
   initialized=true;
 }
@@ -201,6 +200,11 @@ socket.on('joinRoom', function(id) {
       roomToJoin.addPerson(socket.id);
       people[socket.id].inroom = id;
       people[socket.id].roomname = roomToJoin.name;
+      var peopleIn = rooms[id].people.map(function(userId){
+        return people[userId].name;
+      });
+       utils.sendToAllConnectedClients(io, 'peopleOnline', {room : id, people : peopleIn})
+       console.log(peopleIn);
       utils.sendToAllConnectedClients(io, 'updateUserDetail', people);
       utils.sendToSelf(socket, 'sendUserDetail', people[socket.id]);
       if (chatHistory[socket.room] == null || chatHistory[socket.room].length === 0) {
@@ -208,6 +212,7 @@ socket.on('joinRoom', function(id) {
       } else {
         utils.sendToSelf(socket, 'sendChatMessageHistory', chatHistory[socket.room]);
       }
+     
     }
   }
 });
@@ -228,6 +233,10 @@ socket.on('leaveRoom', function(id) {
   if (typeof roomToLeave !== 'undefined') {
     purgatory.purge(socket, 'leaveRoom');
   } else {
+      var peopleIn = rooms[id].people.map(function(userId){
+        return people[userId].name;
+      });
+    utils.sendToAllConnectedClients(io, 'peopleOnline', {room : id, people : peopleIn})
     utils.sendToSelf(socket, 'sendChatMessage', {name: 'ChatBot', message: 'Don\'t be cheeky - you are not the owner of this room.'});
   }
 });
