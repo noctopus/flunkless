@@ -92,10 +92,10 @@
                      <div class="panel-content">
                         <div id="chatpanel" ng-show="user.inroom" ng-cloak>
                            <div id="chat">
-                              <div class="input-control text" ng-show="user.owns || user.inroom">
+                              <form ng-submit="send()" class="input-control text" ng-show="user.owns || user.inroom">
                                  <input ng-model="message" name="message" id="message"on-focus="focus(true)" on-blur="focus(false)" type="text" value="" placeholder="Put message here"/>
                                  <button ng-click='send()'>Submit</button>
-                              </div>
+                              </form>
                               <br><br>
                               <div id="messages" style="overflow:scroll;">
                                  <ul>
