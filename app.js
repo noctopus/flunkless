@@ -4,7 +4,7 @@ var express = require('express')
 , routes = require('./routes')
 , chatServer =require('./chatServer')(server);
 
-  app.set('port', process.env.PORT || 3001);
+  app.set('port', process.env.PORT || 3002);
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.static(__dirname + '/public'));

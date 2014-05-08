@@ -131,9 +131,15 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
   $scope.contextSwitch = function(room){
   }
 
+  $scope.addedInRoom = function(item){
+    return $scope.addedRooms.indexOf(item) < 0;
+  }
+
   $scope.addRoom = function(room){
     $scope.addedRooms.unshift(room);
-    var roomTab = $("<li><a href='#currentRoom'>"+room.name.slice(0,8) + "</a></li>");
+    var roomTab = $("<li><a href='#currentRoom'>"+room.name.slice(0,8) + " </a></li>");
+    var exit = $("<i class='icon-cancel'></i>");
+    roomTab.find("a").append(exit);
     roomTab.click(function(){
       $scope.contextSwitch(room);
       $scope.leaveRoom($scope.currentRoom);

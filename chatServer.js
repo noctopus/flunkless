@@ -99,6 +99,9 @@ socket.on('send', function(data) {
   if (typeof people[socket.id] === 'undefined') {
     utils.sendToSelf(socket, 'sendChatMessage', {name: 'ChatBot', message: 'You need a name first, please.'});
   } else {
+    if(chatHistory[socket.room] == null){
+      chatHistory[socket.room] = [];
+    }
     if (io.sockets.manager.roomClients[socket.id]['/'+socket.room]) {
       if (_.size(chatHistory[socket.room]) > chatHistoryCount) {
         chatHistory[socket.room].splice(0,1);
@@ -150,25 +153,27 @@ function createRoom(data){
                 people[socket.id].inroom = uniqueRoomID; //assign user to room in people object
                 people[socket.id].roomname = roomName;
                 room.addPerson(socket.id);
+                socket.room = roomName;
+                socket.join(socket.room);
               }
-              
               rooms[uniqueRoomID] = room;
-              socket.room = roomName;
-              socket.join(socket.room);
+
               totalRooms = _.size(rooms);
               utils.sendToAllConnectedClients(io, 'updateRoomsCount', {count: totalRooms});
               utils.sendToAllConnectedClients(io,'listAvailableChatRooms', rooms);
               utils.sendToAllConnectedClients(io, 'updateUserDetail', people);
+              chatHistory[socket.room] = []; //initiate chat history
               if(people[socket.id] != null)
                 utils.sendToSelf(socket, 'sendUserDetail', people[socket.id]);
-              chatHistory[socket.room] = []; //initiate chat history
             }
+            
 }
 
 if(initialized == false){
-  var classes = require("./classes.json").slice(0,10)
+  var classes = require("./classes.json")
   classes.forEach(function(elm){
     createRoom(elm.name);
+    console.log(elm.name + " created!");
   });
   initialized=true;
 }
@@ -198,7 +203,7 @@ socket.on('joinRoom', function(id) {
       people[socket.id].roomname = roomToJoin.name;
       utils.sendToAllConnectedClients(io, 'updateUserDetail', people);
       utils.sendToSelf(socket, 'sendUserDetail', people[socket.id]);
-      if (chatHistory[socket.room].length === 0) {
+      if (chatHistory[socket.room] == null || chatHistory[socket.room].length === 0) {
         utils.sendToSelf(socket, 'sendChatMessage', {name: 'ChatBot', message: 'No chat history.'});
       } else {
         utils.sendToSelf(socket, 'sendChatMessageHistory', chatHistory[socket.room]);
