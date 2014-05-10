@@ -203,7 +203,7 @@ socket.on('joinRoom', function(id) {
       var peopleIn = rooms[id].people.map(function(userId){
         return people[userId].name;
       });
-       utils.sendToAllConnectedClients(io, 'peopleOnline', {room : id, people : peopleIn})
+       utils.sendToAllConnectedClients(io, 'roomData', {room : id, people : peopleIn})
        console.log(peopleIn);
       utils.sendToAllConnectedClients(io, 'updateUserDetail', people);
       utils.sendToSelf(socket, 'sendUserDetail', people[socket.id]);
@@ -236,7 +236,7 @@ socket.on('leaveRoom', function(id) {
       var peopleIn = rooms[id].people.map(function(userId){
         return people[userId].name;
       });
-    utils.sendToAllConnectedClients(io, 'peopleOnline', {room : id, people : peopleIn})
+    utils.sendToAllConnectedClients(io, 'roomData', {room : id, people : peopleIn})
     utils.sendToSelf(socket, 'sendChatMessage', {name: 'ChatBot', message: 'Don\'t be cheeky - you are not the owner of this room.'});
   }
 });
