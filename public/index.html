@@ -79,7 +79,7 @@
                      </div>
                      <div class="panel-content">
                         <ul ng-repeat="item in pinnedPosts">
-                           <li>{{item.message}}</li>
+                           <pin post="item"></pin>
                         </ul>
                      </div>
                   </div>
@@ -97,7 +97,7 @@
                               </div>
                               <br>
                               <form class="input-control textarea" 
-                                 ng-submit="send()" ng-show="user.owns || user.inroom"> 
+                                  ng-show="user.owns || user.inroom"> 
                                  <textarea class="input-control text size8" ng-model="message" name="message" id="message"on-focus="focus(true)" on-blur="focus(false)" type="text" value="" placeholder="Put message here"></textarea>
                                  <div class="size2 input-control select">
                                     <select ng-model="writeMode" ng-options="mode for mode in modes"></select>
@@ -111,10 +111,11 @@
                </div>
                <fieldset class="span4 tile quadro-vertical">
                   <legend>People Online</legend>
-                  <div class="listview-outlook" ng-repeat="name in peopleOnline">
-                     <a href="#" class="list">
-                        <div class="list-content" >{{name}}</div>
-                     </a>
+                  <ul ng-repeat="name in peopleOnline">
+                     <li>
+                        {{name}}
+                      </li>
+                     </ul>
                     
                   </div>
                </fieldset>

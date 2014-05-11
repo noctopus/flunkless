@@ -30,3 +30,19 @@ app.directive('autoscroll', function () {
     }, 1000);
   }
 });
+
+app.directive("pin", function(){
+  return {
+    restrict : 'E',
+    scope : {
+      post : '=post'
+    },
+    link : function(scope, el, attrs){
+      if(scope.post.type == 'link'){
+        $(el).html("<a href='http://google.com'>"+scope.post.message + '</a>');
+      }else if(scope.post.type == 'pin'){
+        $(el).html("<p>"+scope.post.message+"</p>")
+      }
+    }
+  }
+})

@@ -5,6 +5,7 @@ module.exports = function(server) {
   , people = {}
   , rooms = {}
   , chatHistory = {}
+  , roomPosts = {}
   , chatHistoryCount = 10
   , sockets = []
   , io = require('socket.io').listen(server)
@@ -96,19 +97,32 @@ socket.on('typing', function(data) {
 });
 
 socket.on('send', function(data) {
+
   if (typeof people[socket.id] === 'undefined') {
     utils.sendToSelf(socket, 'sendChatMessage', {name: 'ChatBot', message: 'You need a name first, please.'});
   } else {
     if(chatHistory[socket.room] == null){
       chatHistory[socket.room] = [];
     }
+
     if (io.sockets.manager.roomClients[socket.id]['/'+socket.room]) {
-      if (_.size(chatHistory[socket.room]) > chatHistoryCount) {
-        chatHistory[socket.room].splice(0,1);
-      } else {
-        chatHistory[socket.room].push(data);
+      if(data.type=='message'){
+        if (_.size(chatHistory[socket.room]) > chatHistoryCount) {
+          chatHistory[socket.room].splice(0,1);
+        } else {
+          chatHistory[socket.room].push(data);
+        }
+        utils.sendToAllClientsInRoom(io, socket.room, 'sendChatMessage', data);
+      }else{
+        if(roomPosts[socket.room] == null){
+            roomPosts[socket.room] = [];
+        }
+        roomPosts[socket.room].push(data);
+        utils.sendToAllConnectedClients(io, 'newPinnedPosts',
+                                          {room : socket.room, 
+                                          posts : roomPosts[socket.room]
+                                          });
       }
-      utils.sendToAllClientsInRoom(io, socket.room, 'sendChatMessage', data);
     } else {
       utils.sendToSelf(socket, 'sendChatMessage', {name: 'ChatBot', message: 'Please connect to a room'});
     }
@@ -173,7 +187,6 @@ if(initialized == false){
   var classes = require("./classes.json")
   classes.forEach(function(elm){
     createRoom(elm.name);
-    console.log(elm.name + " created!");
   });
   initialized=true;
 }
@@ -205,9 +218,12 @@ socket.on('joinRoom', function(id) {
         return people[userId].name;
       });
        utils.sendToAllConnectedClients(io, 'roomData', {room : id, people : peopleIn})
-       console.log(peopleIn);
       utils.sendToAllConnectedClients(io, 'updateUserDetail', people);
       utils.sendToSelf(socket, 'sendUserDetail', people[socket.id]);
+      utils.sendToSelf(socket, 'newPinnedPosts',
+                          {room : socket.room, 
+                          posts : roomPosts[socket.room]
+                          });
       if (chatHistory[socket.room] == null || chatHistory[socket.room].length === 0) {
         utils.sendToSelf(socket, 'sendChatMessage', {name: 'ChatBot', message: 'No chat history.'});
       } else {

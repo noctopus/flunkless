@@ -17,9 +17,7 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
   $scope.create=false;
   $scope.modes = ["Send", "Link", "Pin", "To Professor"];
   $scope.writeMode = $scope.modes[0];
-  $scope.pinnedPosts = [
-  {message : "Hello!, this is item 1", type : 'message'}, 
-  {message : 'Schedule document', type : 'link', src: 'www.google.com'}];
+  $scope.pinnedPosts = [];
   var typing = false;
   var timeout  = undefined;
 
@@ -106,16 +104,23 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
       if($scope.writeMode == $scope.modes[0]){ // send
         socket.emit('send', {
           name: this.username,
-          message: this.message
+          message: this.message,
+          type : 'message'
         });
         $scope.message = '';
         $scope.error.send = '';
       }else if ($scope.writeMode == $scope.modes[1]){
-        alert("Will add linking soon");
-        $scope.pinnedPosts.push({message : this.message});
+        socket.emit("send", {
+          name : this.username,
+          message : this.message,
+          type : 'link'
+        });
       }else if ($scope.writeMode == $scope.modes[2]){
-        alert("So is pinning");
-        $scope.pinnedPosts.push({message : this.message});
+        socket.emit("send", {
+          name : this.username,
+          message : this.message,
+          type : 'pin'
+        });
       }else{
         alert("I DONT KNOW ABOUT THIS ONE");
       }
@@ -176,6 +181,7 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
     $scope.message = '';
     socket.emit('joinRoom', room.id);
     $scope.currentRoom = room;
+    console.log(room);
   }
 
   $scope.leaveRoom = function(room) {
@@ -211,14 +217,18 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
   });
 
   socket.on('roomData', function(data){
-    console.log(data.room);
-    console.log($scope.currentRoom.id);
-    console.log(data.room.localeCompare($scope.currentRoom.id))
     if(data.room.localeCompare($scope.currentRoom.id) >= 0){
         $scope.peopleOnline = data.people;
-        console.log($scope.peopleOnline);
     }
   })
+
+  socket.on("newPinnedPosts", function(data){
+    console.log(data);
+     if(data.room.localeCompare($scope.currentRoom.name) >= 0){
+      $scope.pinnedPosts = data.posts;
+      console.log($scope.pinnedPosts)
+     }
+  });
 
   socket.on('connectingToSocketServer', function(data) {
     $scope.status = data.status;
