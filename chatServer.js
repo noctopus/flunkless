@@ -73,7 +73,7 @@ module.exports = function(server) {
           utils.sendToAllConnectedClients(io, 'updateRoomsCount', {count: totalRooms});
           utils.sendToAllConnectedClients(io, 'updateUserDetail', people);
           utils.sendToAllConnectedClients(io, 'updatePeopleCount', {count: totalPeopleOnline});
-          utils.sendToAllConnectedClients(io,'listAvailableChatRooms', rooms);
+           utils.sendToAllConnectedClients(io,'listAvailableChatRooms', listAvailableRooms(socket,rooms));
           utils.sendToSelf(socket, 'joinedSuccessfully'); //useragent and geolocation detection
           utils.sendToAllConnectedClients(io, 'updateUserDetail', people);
           sockets.push(socket); //keep a collection of all connected clients
@@ -150,17 +150,29 @@ socket.on('createRoom', function(data) {
         flag = true;
       }
       if (!flag) {
-            createRoom(data);
+            createRoom(data, false);
           }
         }
       }
     });
 
-function createRoom(data){
+function listAvailableRooms(socket, rooms){
+  var newrooms = {};
+  for(var i in rooms){
+    if(rooms[i].pubView == false){
+      console.log(rooms[i].invitedUsers, socket.id);
+    }
+    if(rooms[i].pubView || rooms[i].invitedUsers.indexOf(socket.id)>= 0){
+      newrooms[i] = rooms[i];
+    }
+  }
+  return newrooms;
+}
+function createRoom(data, visibility){
           var roomName = data;
         if (roomName.length !== 0) {
               var uniqueRoomID = uuid.v4() //guarantees uniquness of room
-              , room = new Room(roomName, uniqueRoomID, socket.id);
+              , room = new Room(roomName, uniqueRoomID, socket.id, visibility);
 
               if(people[socket.id] != null){
                 people[socket.id].owns = uniqueRoomID; //set ownership of room
@@ -174,7 +186,7 @@ function createRoom(data){
 
               totalRooms = _.size(rooms);
               utils.sendToAllConnectedClients(io, 'updateRoomsCount', {count: totalRooms});
-              utils.sendToAllConnectedClients(io,'listAvailableChatRooms', rooms);
+              utils.sendToAllConnectedClients(io,'listAvailableChatRooms', listAvailableRooms(socket,rooms));
               utils.sendToAllConnectedClients(io, 'updateUserDetail', people);
               chatHistory[socket.room] = []; //initiate chat history
               if(people[socket.id] != null)
