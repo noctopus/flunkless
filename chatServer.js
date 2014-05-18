@@ -84,6 +84,23 @@ function createRoom(data, visibility){
       }
     });
 
+ socket.on('leaveRoom', function(id) {
+    if (typeof people[socket.id] !== 'undefined') {
+      var roomToJoin = rooms[id];
+      socket.leave(roomToJoin.id); // joins actual room
+      roomToJoin.removePerson(people[socket.id]); // adds pointer to person from room
+      delete people[socket.id];
+      var peopleIn = roomToJoin.getListOfPeople();
+      utils.sendToAllConnectedClients(io, 'roomData', {room : id, people : peopleIn})
+      utils.sendToSelf(socket, 'roomPosts',
+        {
+            room : id, 
+            posts : roomToJoin.posts,
+            pinnedPosts : roomToJoin.pinnedPosts
+        });
+      }
+    });
+
     socket.on('send', function(data) {
       if(rooms[data.roomid] == null){
         return;

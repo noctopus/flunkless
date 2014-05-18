@@ -114,6 +114,7 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
     var roomTab = $("<li><a>"+room.name.slice(0,8) + " </a></li>");
     var exit = $("<div class='badge bg-red'></div>");
     room.displayBadge = exit;
+    room.displayTab = roomTab;
     roomTab.find("a").append(exit);
     roomTab.click(function(){
       $scope.$apply(function(){
@@ -128,10 +129,23 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
     $("#classtabs").prepend(roomTab).tabcontrol();
   }
 
-  $scope.leaveRoom = function(room) {
+  $scope.leaveRoom = function(roomid) {
+    var room = $scope.rooms.filter(function(e){
+      return e.id == roomid;
+    })[0];
+    
     $scope.message = '';
-    if(room != null)
-    socket.emit('leaveRoom', room.id);
+    if(room != null){
+      console.log("LEAVING ROOM " + roomid);
+      socket.emit('leaveRoom', room.id);
+      room.displayTab.remove(); 
+      $scope.currentRooms.splice($scope.currentRooms.indexOf(room),1);
+      if($scope.currentRooms == 0){
+        $scope.viewPage = "addroom";
+      }else{
+        $scope.viewPage = $scope.currentRooms[$scope.currentRooms.length-1].id;
+      }
+    }
   }
 
   $scope.deleteRoom = function(room) {
