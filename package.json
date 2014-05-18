@@ -4,6 +4,7 @@
   "description": "Chat application using node.js, socket.io and AngularJS",
   "main": "app.js",
   "dependencies": {
+    "mongoose" : "*",
     "ejs": "*",
     "express": "~3.4.8",
     "express-handlebars" : "*",
@@ -12,7 +13,6 @@
     "socket.io": "~0.9.16",
     "underscore": "~1.5.2",
     "bower": "~1.2.8",
-    "mongoose" : "*",
     "nodemon": "*",
     "fbgraph" : "*"
   },
