@@ -9,8 +9,6 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   $scope.error = {};
 
   $scope.modes = ["Send", "Link", "Pin", "To Professor"];
-  $scope.writeMode = $scope.modes[0];
-
   $scope.categories = [];
   $scope.category = "";
 
@@ -50,11 +48,12 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
     }
   }
 
-  $scope.send = function(id) {
+  $scope.send = function(id, writeMode) {
     if (typeof this.message === 'undefined' || (typeof this.message === 'string' && this.message.length === 0)) {
       $scope.error.send = 'Please enter a message';
     } else {
-      if($scope.writeMode == $scope.modes[0]){ // send
+
+      if(writeMode == $scope.modes[0]){ // send
         socket.emit('send', {
           roomid : id,
           name: this.username,
@@ -63,14 +62,14 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
         });
         $scope.message = '';
         $scope.error.send = '';
-      }else if ($scope.writeMode == $scope.modes[1]){
+      }else if (writeMode == $scope.modes[1]){
         socket.emit("send", {
           name : this.username,
           roomid : id,
           message : this.message,
           type : 'link'
         });
-      }else if ($scope.writeMode == $scope.modes[2]){
+      }else if (writeMode == $scope.modes[2]){
         socket.emit("send", {
           name : this.username,
           roomid : id,
@@ -143,6 +142,7 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
 
   socket.on('listAvailableChatRooms', function(data) {
     angular.forEach(data, function(room, key) {
+      room.writeMode = "Send";
       $scope.rooms.push(room);
       if($scope.categories.indexOf(room.category) < 0){
         $scope.categories.push(room.category);

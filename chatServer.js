@@ -85,10 +85,11 @@ function createRoom(data, visibility){
     });
 
     socket.on('send', function(data) {
+       console.log(data);
       if(rooms[data.roomid] == null){
         return;
       }
-      console.log(data);
+     
       if(data.type=='message'){
           rooms[data.roomid].addPost(data)
       }else{
