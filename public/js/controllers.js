@@ -32,6 +32,7 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
               for(var i = 0; i < $scope.rooms.length; i++){
                 console.log($scope.rooms[i], classid);
                 if($scope.rooms[i].id == classid){
+                  console.log("adding " + $scope.rooms[i].id);
                   $scope.addRoom($scope.rooms[i]);
                 }
               }
