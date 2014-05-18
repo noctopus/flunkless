@@ -77,7 +77,7 @@ function createRoom(data, visibility){
       utils.sendToAllConnectedClients(io, 'roomData', {room : id, people : peopleIn})
       utils.sendToSelf(socket, 'roomPosts',
         {
-            room : roomToJoin.name, 
+            room : id, 
             posts : roomToJoin.posts,
             pinnedPosts : roomToJoin.pinnedPosts
         });
