@@ -11,12 +11,17 @@ module.exports = function(server) {
   , utils = require('./utils/utils')
   , purgatory = require('./utils/purge');
   io.set('log level', 1);
-var classes = require("./classes.json")
-classes.forEach(function(elm){
-    var uniqueRoomID = uuid.v4() //guarantees uniquness of room
-    rooms[uniqueRoomID] = new Room(elm.name, uniqueRoomID, null, true);
-    rooms[uniqueRoomID].setCategory(elm.group);
-});
+  
+  var ClassModel = require("./models/Class").ClassModel;
+  var classQuery = new ClassModel();
+  classQuery.findAll(function(err,classes){
+    classes.forEach(function(elm){
+      var uniqueRoomID = uuid.v4() //guarantees uniquness of room
+      rooms[uniqueRoomID] = new Room(elm.name, uniqueRoomID, null, true);
+      rooms[uniqueRoomID].setCategory(elm.group);
+    });
+  });
+
 
 
 function listAvailableRooms(socket, rooms){
@@ -41,6 +46,7 @@ function createRoom(data, visibility){
   io.sockets.on('connection', function (socket) {
 
     socket.on('joinServer', function(data) {
+      console.log(data);
       var exists = false;
       _.find(people, function(k, v) {
         if (k.name.toLowerCase() === data.name.toLowerCase())

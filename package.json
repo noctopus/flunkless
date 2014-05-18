@@ -12,7 +12,9 @@
     "socket.io": "~0.9.16",
     "underscore": "~1.5.2",
     "bower": "~1.2.8",
-    "nodemon": "*"
+    "mongoose" : "*",
+    "nodemon": "*",
+    "fbgraph" : "*"
   },
   "devDependencies": {},
   "scripts": {

@@ -24,21 +24,22 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   }
 
   $scope.joinServer = function() {
-    $scope.user.name = this.username;
-    if ($scope.user.name.length === 0) {
+    var username = this.username;
+    if (username === 0) {
       $scope.error.join ='Please enter a username';
     } else {
       $scope.loading=true;
       var usernameExists = false;
-      socket.emit('checkUniqueUsername', $scope.user.name, function(data) {
+      socket.emit('checkUniqueUsername', username, function(data) {
         usernameExists = data.result;
         if (usernameExists) {
-          $scope.error.join = 'Username ' + $scope.user.name + ' already exists.';
-          socket.emit('suggest', $scope.user.name, function(data) {
+          $scope.error.join = 'Username ' + this.username + ' already exists.';
+          socket.emit('suggest', this.username, function(data) {
             $scope.suggestedUsername = data.suggestedUsername;
             $scope.loading=false;
           });
         } else {
+          $scope.user.name = username;
           socket.emit('joinServer', {name: $scope.user.name});
           $scope.joined = true;
           $scope.error.join = '';
