@@ -192,23 +192,22 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
       if($scope.categories.indexOf(room.category) < 0){
         $scope.categories.push(room.category);
       }
-      if($scope.classIDStoLoad.length > 0){
-        var classids = $scope.classIDStoLoad;
-        classids.forEach(function(classid){
-        for(var i = 0; i < $scope.rooms.length; i++){
-          if($scope.rooms[i].id == classid){
-            $scope.addRoom($scope.rooms[i]);
-            }
-          } 
-        })
-        $scope.classIDStoLoad = [];
-      }
-
     });
 
     $scope.rooms = $scope.rooms.sort(function(e1,e2){
       return e1.name.localeCompare(e2.name);
     });
+    if($scope.classIDStoLoad.length > 0){
+      var classids = $scope.classIDStoLoad;
+      classids.forEach(function(classid){
+      for(var i = 0; i < $scope.rooms.length; i++){
+        if($scope.rooms[i].id == classid){
+          $scope.addRoom($scope.rooms[i]);
+          }
+        } 
+      })
+        $scope.classIDStoLoad = [];
+    }
   });
 
   socket.on('sendChatMessage', function(message) {
