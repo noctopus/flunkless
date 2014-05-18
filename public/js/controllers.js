@@ -23,7 +23,25 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
     $scope.focussed = bool;
   }
 
-  $scope.joinServer = function() {
+  $scope.FBLogin = function(){
+    FB.login(function(){
+      FB.api('/me', function(response) {
+        $scope.joinServer(response);
+          socket.emit("getClassID", response.id, function(classids){
+            classids.forEach(function(classid){
+              for(var i = 0; i < $scope.rooms.length; i++){
+                console.log($scope.rooms[i], classid);
+                if($scope.rooms[i].id == classid){
+                  $scope.addRoom($scope.rooms[i]);
+                }
+              }
+            })
+        });
+      });
+    });
+  }
+
+  $scope.joinServer = function(fbresponse) {
     var username = this.username;
     if (username === 0) {
       $scope.error.join ='Please enter a username';
@@ -40,7 +58,10 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
           });
         } else {
           $scope.user.name = username;
-          socket.emit('joinServer', {name: $scope.user.name});
+          if(fbresponse != null){
+            $scope.user.realname = fbresponse.name;
+          }
+          socket.emit('joinServer', {name: $scope.user.name, fbinfo : fbresponse});
           $scope.joined = true;
           $scope.error.join = '';
           $scope.loading=false;
@@ -184,6 +205,7 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   });
 
   socket.on('roomData', function(data){
+    console.log(data);
     angular.forEach($scope.currentRooms, function(room){
       if(data.room.localeCompare(room.id) >= 0){
           room.people = data.people;

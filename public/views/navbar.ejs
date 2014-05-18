@@ -11,7 +11,9 @@
         <item class="element"><a class="fg-white">Manage Groups</a></item>
         <span class="element-divider place-right"></span>
         <a class="element place-right" href="#"><span><i class="icon-cog"></i></a>
-        <a class="element place-right" href="#"><span>Hello, {{user.name}}</span></a>
+        <a class="element place-right" href="#">
+            <span>Hello, {{user.realname == null? user.name : user.realname}}</span>
+        </a>
     </nav>
 </nav>
 <br>

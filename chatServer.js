@@ -11,14 +11,16 @@ module.exports = function(server) {
   , utils = require('./utils/utils')
   , purgatory = require('./utils/purge');
   io.set('log level', 1);
-  
+
   var ClassModel = require("./models/Class").ClassModel;
+  var UserModel = require("./models/User").UserModel;
   var classQuery = new ClassModel();
+  var userQuery = new UserModel();
+
   classQuery.findAll(function(err,classes){
     classes.forEach(function(elm){
-      var uniqueRoomID = uuid.v4() //guarantees uniquness of room
-      rooms[uniqueRoomID] = new Room(elm.name, uniqueRoomID, null, true);
-      rooms[uniqueRoomID].setCategory(elm.group);
+      rooms[elm.id] = new Room(elm.name, elm.id, null, true);
+      rooms[elm.id].setCategory(elm.group);
     });
   });
 
@@ -43,10 +45,24 @@ function createRoom(data, visibility){
   }
 }
 
+function loadFBInfo(user, fbinfo, socket){
+  user.id = fbinfo.id;
+  user.realname = fbinfo.name;
+  userQuery.findByID(fbinfo.id, function(err, user){
+    if(user == null){
+        userQuery.save({id : fbinfo.id, name : fbinfo.name , rooms : []}, function(user){
+          socket.fbUser = user;
+        });
+    }else{
+      socket.fbUser = user;
+    }
+  })
+}
+
   io.sockets.on('connection', function (socket) {
 
     socket.on('joinServer', function(data) {
-      console.log(data);
+      var fbinfo = data.fbinfo;
       var exists = false;
       _.find(people, function(k, v) {
         if (k.name.toLowerCase() === data.name.toLowerCase())
@@ -56,6 +72,9 @@ function createRoom(data, visibility){
       if (!exists) {
         if (data.name.length !== 0) {
           var user = new Person(data.name, socket.id);
+          if(fbinfo != null){
+            loadFBInfo(user, data.fbinfo, socket)
+          }
           people[socket.id] = user;
           utils.sendToSelf(socket,'listAvailableChatRooms', listAvailableRooms(socket,rooms));
         }
@@ -80,13 +99,21 @@ function createRoom(data, visibility){
       roomToJoin.addPerson(people[socket.id]); // adds pointer to person from room
       people[socket.id].addRoom(roomToJoin); // adds pointer to room from person
       var peopleIn = roomToJoin.getListOfPeople();
-      utils.sendToAllConnectedClients(io, 'roomData', {room : id, people : peopleIn})
+      utils.sendToAllConnectedClients(io, 'roomData', {room : id+"", people : peopleIn})
       utils.sendToSelf(socket, 'roomPosts',
         {
             room : id, 
             posts : roomToJoin.posts,
             pinnedPosts : roomToJoin.pinnedPosts
         });
+        if(socket.fbUser != null){
+          if(socket.fbUser.rooms.indexOf(id)< 0){
+            socket.fbUser.rooms.push(id);
+            socket.fbUser.save(function(err){
+              console.log(err);
+            });
+          }
+        }
       }
     });
 
@@ -97,13 +124,22 @@ function createRoom(data, visibility){
       roomToJoin.removePerson(people[socket.id]); // adds pointer to person from room
       delete people[socket.id];
       var peopleIn = roomToJoin.getListOfPeople();
-      utils.sendToAllConnectedClients(io, 'roomData', {room : id, people : peopleIn})
+      utils.sendToAllConnectedClients(io, 'roomData', {room : id+"", people : peopleIn})
       utils.sendToSelf(socket, 'roomPosts',
         {
             room : id, 
             posts : roomToJoin.posts,
             pinnedPosts : roomToJoin.pinnedPosts
         });
+        if(socket.fbUser != null){
+          var index = socket.fbUser.rooms.indexOf(id);
+          if(index >= 0){
+            socket.fbUser.rooms.splice(index,1);
+            socket.fbUser.save(function(err){
+              console.log(err);
+            });
+          }
+        }
       }
     });
 
@@ -131,11 +167,18 @@ function createRoom(data, visibility){
         var user = people[socket.id];
         user.rooms.forEach(function(e){
           rooms[e].removePerson(user.name);
-          utils.sendToAllConnectedClients(io, 'roomData', {room : rooms[e].id, people : rooms[e].getListOfPeople()})
+          utils.sendToAllConnectedClients(io, 'roomData', {room : rooms[e].id + "", people : rooms[e].getListOfPeople()})
         }); 
         delete people[socket.id];
         utils.sendToAllConnectedClients(io,'listAvailableChatRooms', listAvailableRooms(socket,rooms));
       }
+  });
+
+  socket.on("getClassID", function(fbid, cb){
+    userQuery.findByID(fbid, function(err, user){
+      console.log(user);
+      cb(user.rooms)
+    });
   });
 
 
