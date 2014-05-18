@@ -14,6 +14,7 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
 
   $scope.currentRooms = [];
   $scope.viewPage = "addroom"; // this is a hack for the buggy tabs
+  $scope.classIDStoLoad = [];
 
   $scope.setUsername = function(suggestedUsername) {
     $scope.username = suggestedUsername;
@@ -28,16 +29,18 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
       FB.api('/me', function(response) {
         $scope.joinServer(response);
           socket.emit("getClassID", response.id, function(classids){
-            console.log("CLASS IDS ARE", classids)
-            console.log($scope.rooms);
-            classids.forEach(function(classid){
-              for(var i = 0; i < $scope.rooms.length; i++){
-                console.log($scope.rooms[i], classid);
-                if($scope.rooms[i].id == classid){
-                  $scope.addRoom($scope.rooms[i]);
+            if($scope.rooms.length > 0){
+              classids.forEach(function(classid){
+                for(var i = 0; i < $scope.rooms.length; i++){
+                  console.log($scope.rooms[i], classid);
+                  if($scope.rooms[i].id == classid){
+                    $scope.addRoom($scope.rooms[i]);
+                  }
                 }
-              }
-            })
+              })
+            }else{
+              $scope.classIDStoLoad = classids;
+            }
         });
       });
     });
@@ -189,6 +192,17 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
       if($scope.categories.indexOf(room.category) < 0){
         $scope.categories.push(room.category);
       }
+      if($scope.classIDStoLoad.length > 0){
+        var classids = $scope.classIDStoLoad;
+        classids.forEach(function(classid){
+        for(var i = 0; i < $scope.rooms.length; i++){
+          if($scope.rooms[i].id == classid){
+            $scope.addRoom($scope.rooms[i]);
+            }
+          } 
+        })
+      }
+
     });
 
     $scope.rooms = $scope.rooms.sort(function(e1,e2){
