@@ -41,7 +41,7 @@
    <fieldset>
       <legend>People Online</legend>
       <ul ng-repeat="person in room.people">
-         <li>{{person}}</li>
+         <li>{{person.name}}</li>
       </ul>
       <button ng-click="leaveRoom(room.id)">Leave Room</button>
    </fieldset>
