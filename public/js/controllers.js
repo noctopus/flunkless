@@ -179,8 +179,9 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   socket.on('roomPosts', function(data){
 
     angular.forEach($scope.currentRooms, function(room){
-      console.log(data, room);
+
       if(data.room.localeCompare(room.name) >= 0){
+              console.log(data, room);
           if(room.id != $scope.viewPage){
             console.log(data.posts, room.posts);
             room.messageQueue += data.posts.length - room.posts.length;
