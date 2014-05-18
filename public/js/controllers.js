@@ -177,19 +177,17 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   })
 
   socket.on('roomPosts', function(data){
-
+    console.log("CHECKING OUT WHAT THE CURRENT ROOMS ARE", $scope.currentRooms);
     angular.forEach($scope.currentRooms, function(room){
 
       if(data.room.localeCompare(room.name) >= 0){
-              console.log(data, room);
+          console.log("WHAT IS THE DATA THAT MAKES IT EQUAL?", data, room);
           if(room.id != $scope.viewPage){
-            console.log(data.posts, room.posts);
             room.messageQueue += data.posts.length - room.posts.length;
             room.displayBadge.text(room.messageQueue);
           }
           room.posts = data.posts;
           room.pinnedPosts = data.pinnedPosts;
-          console.log(room);
      }
     });
   });
