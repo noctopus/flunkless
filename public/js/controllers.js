@@ -112,12 +112,15 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   $scope.addRoom = function(room){
     $scope.currentRooms.unshift(room);
     var roomTab = $("<li><a>"+room.name.slice(0,8) + " </a></li>");
-    var exit = $("<i class='icon-cancel'></i>");
+    var exit = $("<div class='badge bg-red'></div>");
+    room.displayBadge = exit;
     roomTab.find("a").append(exit);
     roomTab.click(function(){
       $scope.$apply(function(){
         $scope.viewPage = room.id;
         roomTab.addClass("active");
+        room.messageQueue = 0;
+         room.displayBadge.text(room.messageQueue);
       });
     });
 
@@ -143,6 +146,7 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   socket.on('listAvailableChatRooms', function(data) {
     angular.forEach(data, function(room, key) {
       room.writeMode = "Send";
+      room.messageQueue = 0;
       $scope.rooms.push(room);
       if($scope.categories.indexOf(room.category) < 0){
         $scope.categories.push(room.category);
@@ -173,11 +177,16 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   })
 
   socket.on('roomPosts', function(data){
-    console.log(data);
     angular.forEach($scope.currentRooms, function(room){
       if(data.room.localeCompare(room.id) >= 0){
+          if(room.id != $scope.viewPage){
+            console.log(data.posts, room.posts);
+            room.messageQueue += data.posts.length - room.posts.length;
+            room.displayBadge.text(room.messageQueue);
+          }
           room.posts = data.posts;
           room.pinnedPosts = data.pinnedPosts;
+          console.log(room);
      }
     });
   });
