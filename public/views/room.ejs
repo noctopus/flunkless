@@ -4,16 +4,6 @@
 <div class="span10" >
    <div class="panel"  data-role="panel">
       <div class="panel-header  bg-lightBlue fg-white">
-         Pinned Notes
-      </div>
-      <div class="panel-content">
-         <ul ng-repeat="item in room.pinnedPosts">
-            <pin post="item"></pin>
-         </ul>
-      </div>
-   </div>
-   <div class="panel"  data-role="panel">
-      <div class="panel-header  bg-lightBlue fg-white">
          ChatBox
       </div>
       <div class="panel-content">
@@ -26,7 +16,6 @@
                <br>
                <form class="input-control textarea">
                   <textarea class="input-control text size8" ng-model="message" name="message" id="message"on-focus="focus(true)" on-blur="focus(false)" type="text" value="" placeholder="Put message here"></textarea>
-                  {{room.writeMode}}
                   <div class="size2 input-control select">
                      <select ng-model="room.writeMode" ng-options="mode for mode in modes"></select>
                   </div>
@@ -36,10 +25,22 @@
          </div>
       </div>
    </div>
-         <fieldset class="span4 tile quadro-vertical">
-            <legend>People Online</legend>
-            <ul ng-repeat="person in room.people">
-               <li>{{person}}</li>
-            </ul>
-         </fieldset>
+   <div class="span4">
+         <div class="panel"  data-role="panel">
+      <div class="panel-header  bg-lightBlue fg-white">
+         Pinned Notes
+      </div>
+      <div class="panel-content">
+         <ul ng-repeat="item in room.pinnedPosts">
+            <pin post="item"></pin>
+         </ul>
+      </div>
+   </div>
+   <fieldset>
+      <legend>People Online</legend>
+      <ul ng-repeat="person in room.people">
+         <li>{{person}}</li>
+      </ul>
+   </fieldset>
+</div>
 </div>
