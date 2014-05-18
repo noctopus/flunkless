@@ -11,8 +11,9 @@ var express = require('express')
   app.use('/components', express.static(__dirname + '/components'));
   app.use('/js', express.static(__dirname + '/js'));
   app.use('/icons', express.static(__dirname + '/icons'));
-  app.use(app.router);
+  app.set("views", __dirname + "/public/views");
   app.set('view engine', 'ejs');
+  app.use(app.router);
 
   app.get('/', routes.index);
 server.listen(app.get('port'), function(){

@@ -1,76 +1,29 @@
 'use strict';
 
-function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
-  console.log("IN CHAT APP")
+function ChatAppCtrl($scope, $q, $modal, socket) {
   $scope.peopleCount = 0;
   $scope.messages = [];
   $scope.user = {}; //holds information about the current user
   $scope.users = {}; //holds information about ALL users
   $scope.rooms = []; //holds information about all rooms
   $scope.error = {};
-  $scope.typingPeople = [];
-  $scope.username = '';
-  $scope.joined = false;
-  $scope.loading=false;
-  $scope.addedRooms = [];
-  $scope.peopleOnline = [];
-  $scope.create=false;
+
   $scope.modes = ["Send", "Link", "Pin", "To Professor"];
   $scope.writeMode = $scope.modes[0];
-  $scope.pinnedPosts = [];
-  var typing = false;
-  var timeout  = undefined;
 
-  /* ABOUT PAGE */
-  $scope.about = function() {
-    var modalInstance = $modal.open({
-      templateUrl: 'aboutModal',
-      controller: aboutModalCtrl
-    });
-  };
+  $scope.categories = [];
+  $scope.category = "";
 
-  var aboutModalCtrl = function($scope, $modalInstance) {
-    $scope.cancel = function() {
-      $modalInstance.dismiss('cancel');
-    };
-  };
-  /* ABOUT PAGE END */
+  $scope.currentRooms = [];
+  $scope.viewPage = "addroom"; // this is a hack for the buggy tabs
 
   $scope.setUsername = function(suggestedUsername) {
     $scope.username = suggestedUsername;
   }
 
-  function timeoutFunction() {
-    typing = false;
-    socket.emit('typing', false);
-  }
-
   $scope.focus = function(bool) {
     $scope.focussed = bool;
   }
-  $scope.typing = function(event, room) {
-    if (event.which !== 13) {
-      if (typing === false && $scope.focussed && room !== null) {
-        typing = true;
-        socket.emit('typing', true);
-      } else {
-        clearTimeout(timeout);
-        timeout = setTimeout(timeoutFunction, 1000);
-      }
-    }
-  }
-
-  socket.on('isTyping', function(data) {
-    if (data.isTyping) {
-      $scope.isTyping = data.isTyping;
-      $scope.typingPeople.push(data.person);
-    } else {
-      $scope.isTyping = data.isTyping;
-      var index = $scope.typingPeople.indexOf(data.person);
-      $scope.typingPeople.splice(index, 1);
-      $scope.typingMessage = '';
-    }
-  });
 
   $scope.joinServer = function() {
     $scope.user.name = this.username;
@@ -88,7 +41,7 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
             $scope.loading=false;
           });
         } else {
-          socket.emit('joinSocketServer', {name: $scope.user.name});
+          socket.emit('joinServer', {name: $scope.user.name});
           $scope.joined = true;
           $scope.error.join = '';
           $scope.loading=false;
@@ -97,12 +50,13 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
     }
   }
 
-  $scope.send = function() {
+  $scope.send = function(id) {
     if (typeof this.message === 'undefined' || (typeof this.message === 'string' && this.message.length === 0)) {
       $scope.error.send = 'Please enter a message';
     } else {
       if($scope.writeMode == $scope.modes[0]){ // send
         socket.emit('send', {
+          roomid : id,
           name: this.username,
           message: this.message,
           type : 'message'
@@ -112,12 +66,14 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
       }else if ($scope.writeMode == $scope.modes[1]){
         socket.emit("send", {
           name : this.username,
+          roomid : id,
           message : this.message,
           type : 'link'
         });
       }else if ($scope.writeMode == $scope.modes[2]){
         socket.emit("send", {
           name : this.username,
+          roomid : id,
           message : this.message,
           type : 'pin'
         });
@@ -150,38 +106,24 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
     }
   }
 
-  $scope.contextSwitch = function(room){
-  }
-
   $scope.addedInRoom = function(item){
-    return $scope.addedRooms.indexOf(item) < 0;
+    return $scope.currentRooms.indexOf(item) < 0;
   }
 
   $scope.addRoom = function(room){
-    $scope.addedRooms.unshift(room);
-    var roomTab = $("<li><a href='#currentRoom'>"+room.name.slice(0,8) + " </a></li>");
+    $scope.currentRooms.unshift(room);
+    var roomTab = $("<li><a>"+room.name.slice(0,8) + " </a></li>");
     var exit = $("<i class='icon-cancel'></i>");
     roomTab.find("a").append(exit);
     roomTab.click(function(){
-      $scope.contextSwitch(room);
-      $scope.leaveRoom($scope.currentRoom);
-      $scope.joinRoom(room);
       $scope.$apply(function(){
-        $scope.create=false;
+        $scope.viewPage = room.id;
         roomTab.addClass("active");
       });
-      
     });
-    $("#classtabs").prepend(roomTab).tabcontrol();
-  }
 
-  $scope.joinRoom = function(room) {
-    $scope.messages = [];
-    $scope.error.create = '';
-    $scope.message = '';
     socket.emit('joinRoom', room.id);
-    $scope.currentRoom = room;
-    console.log(room);
+    $("#classtabs").prepend(roomTab).tabcontrol();
   }
 
   $scope.leaveRoom = function(room) {
@@ -200,9 +142,15 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
   });
 
   socket.on('listAvailableChatRooms', function(data) {
-    $scope.rooms.length = 0;
     angular.forEach(data, function(room, key) {
-      $scope.rooms.push({name: room.name, id: room.id});
+      $scope.rooms.push(room);
+      if($scope.categories.indexOf(room.category) < 0){
+        $scope.categories.push(room.category);
+      }
+    });
+
+    $scope.rooms = $scope.rooms.sort(function(e1,e2){
+      return e1.name.localeCompare(e2.name);
     });
   });
 
@@ -217,61 +165,22 @@ function ChatAppCtrl($scope, $q, $modal, socket, useragent, geolocation) {
   });
 
   socket.on('roomData', function(data){
-    if(data.room.localeCompare($scope.currentRoom.id) >= 0){
-        $scope.peopleOnline = data.people;
-    }
+    angular.forEach($scope.currentRooms, function(room){
+      if(data.room.localeCompare(room.id) >= 0){
+          room.people = data.people;
+     }
+    });
   })
 
-  socket.on("newPinnedPosts", function(data){
+  socket.on('roomPosts', function(data){
     console.log(data);
-     if(data.room.localeCompare($scope.currentRoom.name) >= 0){
-      $scope.pinnedPosts = data.posts;
-      console.log($scope.pinnedPosts)
+    angular.forEach($scope.currentRooms, function(room){
+      if(data.room.localeCompare(room.id) >= 0){
+          room.posts = data.posts;
+          room.pinnedPosts = data.pinnedPosts;
      }
-  });
-
-  socket.on('connectingToSocketServer', function(data) {
-    $scope.status = data.status;
-  });
-
-  socket.on('usernameExists', function(data) {
-    $scope.error.join = data.data;
-  });
-
-  socket.on('updateUserDetail', function(data) {
-    $scope.users = data;
-  });
-
-  socket.on('joinedSuccessfully', function() {
-    var payload = {
-      countrycode: '',
-      device: ''
-    };
-    geolocation.getLocation().then(function(position) {
-      return geolocation.getCountryCode(position);
-    }).then(function(countryCode) {
-      payload.countrycode = countryCode;
-      return useragent.getUserAgent();
-    }).then(function(ua) {
-      return useragent.getIcon(ua);
-    }).then(function(device) {
-      payload.device = device;
-      socket.emit('userDetails', payload);
     });
   });
 
-  socket.on('updatePeopleCount', function(data) {
-    $scope.peopleCount = data.count;
-  });
-
-  socket.on('updateRoomsCount', function(data) {
-    $scope.roomCount = data.count;
-  });
-
-  socket.on('disconnect', function(){
-    $scope.status = 'offline';
-    $scope.users = 0;
-    $scope.peopleCount = 0;
-  });
 }
 
