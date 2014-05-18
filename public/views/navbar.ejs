@@ -1,0 +1,17 @@
+<div class="page-header" ng-hide="user.name != null">
+    <h1><i class="icon-comments-4"></i>FlunkLess<small> A collaborative workspace</small></h1>
+</div>
+
+<nav class="navigation-bar">
+    <nav class="navigation-bar-content" ng-hide="user.name == null">
+        <item class="element"><span class="icon-comments-4"> FlunkLess </item>
+        <item class="element-divider"></item>
+        <item class="element"><a class="fg-white">Create Group</a></item>
+        <item class="element-divider"></item>
+        <item class="element"><a class="fg-white">Manage Groups</a></item>
+        <span class="element-divider place-right"></span>
+        <a class="element place-right" href="#"><span><i class="icon-cog"></i></a>
+        <a class="element place-right" href="#"><span>Hello, {{user.name}}</span></a>
+    </nav>
+</nav>
+<br>

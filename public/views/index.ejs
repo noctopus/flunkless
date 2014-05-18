@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html ng-app="chat">
+    <%- include header.ejs %>
+   <body class="metro container" ng-controller="ChatAppCtrl">
+      <%- include navbar.ejs %>
+      <!-- Begin page content -->
+      <div ng-show="!joined">
+          <%- include login.ejs %>
+      </div>
+      <div ng-hide="!joined" ng-cloak>
+      <div class="tab-control" data-role="tab-control">
+        <ul class="tabs" id="classtabs">
+          <li ng-class="{'active' : viewPage == 'addroom'}" 
+              ng-click='viewPage = "addroom"'><a>Add/Create a Room</a></li>
+        </ul>
+        
+        <div class="frames">
+
+          <div id="addroom" ng-show="viewPage == 'addroom'"> 
+            <div ng-show="grid">
+              <%- include gridRoomLayout %>
+            </div>
+            <div ng-show="!grid">
+              <%- include listRoomLayout %>
+            </div>
+          </div>
+
+          <div ng-repeat="room in currentRooms">
+            <%- include room %>
+          </div>
+
+        </div>
+      </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+ <a href="#" ng-click="grid = !grid"> Switch to Grid View </a>
+<div class="grid">
+	<div class="row">
+		<nav class="sidebar light span3">
+			<%- include roomcreation %>
+    		<ul ng-repeat = "category in categories">
+        		<li><a ng-click="" href="#">{{category}}</a></li>
+    		</ul>
+		</nav>
+		<div class="span8" style="height:500px; overflow:visible">
+			<div class="listview"  
+				ng-repeat="room in rooms | filter:roomname | filter: addedInRoom" ng-cloak>
+    			<a href="#" class="list" ng-click='addRoom(room)'>
+        			<div class="list-content">{{ room.name }}</div>
+    			</a>
+			</div>
+		</div>
+	</div>
+</div>
