@@ -39,7 +39,10 @@ app.directive("pin", function(){
     },
     link : function(scope, el, attrs){
       if(scope.post.type == 'link'){
-        $(el).html("<a href='http://google.com'>"+scope.post.message + '</a>');
+        if(scope.post.url.slice(0,3) == "www"){
+          scope.post.url = "http://" + scope.post.url;
+        }
+        $(el).html("<a target='_blank' href='"+scope.post.url+ "'>"+scope.post.message + '</a>');
       }else if(scope.post.type == 'pin'){
         $(el).html("<p>"+scope.post.message+"</p>")
       }

@@ -77,7 +77,7 @@ function createRoom(data, visibility){
       utils.sendToAllConnectedClients(io, 'roomData', {room : id, people : peopleIn})
       utils.sendToSelf(socket, 'roomPosts',
         {
-            room : id, 
+            room : roomToJoin.name, 
             posts : roomToJoin.posts,
             pinnedPosts : roomToJoin.pinnedPosts
         });
@@ -85,7 +85,6 @@ function createRoom(data, visibility){
     });
 
     socket.on('send', function(data) {
-       console.log(data);
       if(rooms[data.roomid] == null){
         return;
       }

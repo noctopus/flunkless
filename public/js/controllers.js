@@ -52,7 +52,6 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
     if (typeof this.message === 'undefined' || (typeof this.message === 'string' && this.message.length === 0)) {
       $scope.error.send = 'Please enter a message';
     } else {
-
       if(writeMode == $scope.modes[0]){ // send
         socket.emit('send', {
           roomid : id,
@@ -67,6 +66,7 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
           name : this.username,
           roomid : id,
           message : this.message,
+          url : this.urllink,
           type : 'link'
         });
       }else if (writeMode == $scope.modes[2]){
@@ -177,8 +177,10 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   })
 
   socket.on('roomPosts', function(data){
+
     angular.forEach($scope.currentRooms, function(room){
-      if(data.room.localeCompare(room.id) >= 0){
+      console.log(data, room);
+      if(data.room.localeCompare(room.name) >= 0){
           if(room.id != $scope.viewPage){
             console.log(data.posts, room.posts);
             room.messageQueue += data.posts.length - room.posts.length;
