@@ -201,6 +201,7 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
             }
           } 
         })
+        $scope.classIDStoLoad = [];
       }
 
     });
