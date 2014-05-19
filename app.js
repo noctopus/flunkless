@@ -2,8 +2,7 @@ var express = require('express')
 , app = express()
 , server = require('http').createServer(app)
 , routes = require('./routes')
-, chatServer =require('./chatServer')(server),
-  graph = require('fbgraph');
+, chatServer =require('./chatServer')(server)
 
   app.use(express.cookieParser() );
   app.use(express.session({ secret: 'nyan cat'}));
