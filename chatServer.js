@@ -1,5 +1,5 @@
 module.exports = function(server) {
-  var uuid = require('node-uuid')
+  var uuid = require('node-uuid');
   _ = require('underscore')._
   , Room = require('./utils/room')
   , Person = require("./utils/person")
@@ -25,7 +25,6 @@ module.exports = function(server) {
   });
 
 
-
 function listAvailableRooms(socket, rooms){
   var newrooms = {};
   for(var i in rooms){
@@ -38,8 +37,8 @@ function listAvailableRooms(socket, rooms){
 function createRoom(data, visibility){
   var roomName = data;
   if (roomName.length !== 0) {
-    var uniqueRoomID = uuid.v4() //guarantees uniquness of room
-    , room = new Room(roomName, uniqueRoomID, socket.id, visibility);
+    var uniqueRoomID = uuid.v4(); //guarantees uniquness of room
+    var room = new Room(roomName, uniqueRoomID, socket.id, visibility);
     rooms[uniqueRoomID] = room;
    utils.sendToAllConnectedClients(io,'listAvailableChatRooms', listAvailableRooms(socket,rooms));
   }
@@ -49,14 +48,14 @@ function loadFBInfo(user, fbinfo, socket){
   user.id = fbinfo.id;
   user.realname = fbinfo.name;
   userQuery.findByID(fbinfo.id, function(err, user){
-    if(user == null){
+    if(user === null){
         userQuery.save({id : fbinfo.id, name : fbinfo.name , rooms : []}, function(user){
           socket.fbUser = user;
         });
     }else{
       socket.fbUser = user;
     }
-  })
+  });
 }
 
   io.sockets.on('connection', function (socket) {
@@ -149,9 +148,9 @@ function loadFBInfo(user, fbinfo, socket){
       }
      
       if(data.type=='message'){
-          rooms[data.roomid].addPost(data)
+          rooms[data.roomid].addPost(data);
       }else{
-          rooms[data.roomid].pinPost(data)
+          rooms[data.roomid].pinPost(data);
     }
       console.log(rooms[data.roomid]);
       utils.sendToAllClientsInRoom(io,  data.roomid, 'roomPosts',
@@ -163,11 +162,11 @@ function loadFBInfo(user, fbinfo, socket){
   });
 
   socket.on('disconnect', function() {
-    if(people[socket.id] != null){
+    if(people[socket.id] !== null){
         var user = people[socket.id];
         user.rooms.forEach(function(e){
           rooms[e].removePerson(user.name);
-          utils.sendToAllConnectedClients(io, 'roomData', {room : rooms[e].id + "", people : rooms[e].getListOfPeople()})
+          utils.sendToAllConnectedClients(io, 'roomData', {room : rooms[e].id + "", people : rooms[e].getListOfPeople()});
         }); 
         delete people[socket.id];
         utils.sendToAllConnectedClients(io,'listAvailableChatRooms', listAvailableRooms(socket,rooms));
