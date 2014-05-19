@@ -137,6 +137,7 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   }
 
   $scope.addRoom = function(room){
+    //TODO: need a check here to see if user has already added room!
     $scope.currentRooms.unshift(room);
     var roomTab = $("<li><a>"+room.name.slice(0,8) + " </a></li>");
     var exit = $("<div class='badge bg-red'></div>");

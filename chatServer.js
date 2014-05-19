@@ -95,10 +95,17 @@ function loadFBInfo(user, fbinfo, socket){
     socket.on('joinRoom', function(id) {
     if (typeof people[socket.id] !== 'undefined') {
       var roomToJoin = rooms[id];
+      var peopleIn = roomToJoin.getListOfPeople();
+
+      console.log(people[socket.id]);
+      if(_.contains(peopleIn, people[socket.id].name)){
+          console.log(people[socket.id].name + " is already in this room");
+      }
+
       socket.join(roomToJoin.id); // joins actual room
       roomToJoin.addPerson(people[socket.id]); // adds pointer to person from room
       people[socket.id].addRoom(roomToJoin); // adds pointer to room from person
-      var peopleIn = roomToJoin.getListOfPeople();
+
       utils.sendToAllConnectedClients(io, 'roomData', {room : id+"", people : peopleIn});
       utils.sendToSelf(socket, 'roomPosts',
         {
@@ -115,6 +122,9 @@ function loadFBInfo(user, fbinfo, socket){
           }
         }
       }
+    // if (_.contains((room.people), socket.id)) {
+    //   console.log("already in this room")
+    // }
     });
 
  socket.on('leaveRoom', function(id) {
