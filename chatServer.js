@@ -98,7 +98,7 @@ function loadFBInfo(user, fbinfo, socket){
       roomToJoin.addPerson(people[socket.id]); // adds pointer to person from room
       people[socket.id].addRoom(roomToJoin); // adds pointer to room from person
       var peopleIn = roomToJoin.getListOfPeople();
-      utils.sendToAllConnectedClients(io, 'roomData', {room : id+"", people : peopleIn})
+      utils.sendToAllConnectedClients(io, 'roomData', {room : id+"", people : peopleIn});
       utils.sendToSelf(socket, 'roomPosts',
         {
             room : id, 
