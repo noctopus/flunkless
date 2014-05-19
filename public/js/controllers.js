@@ -180,6 +180,17 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
     socket.emit('deleteRoom', room.id)
   }
 
+  socket.on("whisper", function(person, msg) {
+    var s;
+    if (person.name === "You") {
+      s = "whisper"
+    } else {
+      s = "whispers"
+    }
+    console.log(person.name + " " + s + ": " + msg);
+    $(".messages-list").append("<li><strong><span class='text-muted'>" + person.name + "</span></strong> "+ s +": " + msg + "</li>");
+  });
+
   socket.on('sendUserDetail', function(data) {
     $scope.user = data;
   });

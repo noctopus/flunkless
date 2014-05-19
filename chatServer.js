@@ -34,6 +34,7 @@ function listAvailableRooms(socket, rooms){
   }
   return newrooms;
 }
+
 function createRoom(data, visibility){
   var roomName = data;
   if (roomName.length !== 0) {
@@ -143,26 +144,63 @@ function loadFBInfo(user, fbinfo, socket){
     });
 
     socket.on('send', function(data) {
+      //if no existing room
       if(rooms[data.roomid] == null){
         return;
       }
      
       if(data.type=='message'){
-          rooms[data.roomid].addPost(data);
+
+          //add whisper functionality
+          var re = /^[w]:.*:/;
+          var whisper = re.test(data.message);
+          var whisperStr = data.message.split(":");
+          var found = false;
+
+          //if whisper type detected
+          if (whisper) {
+            var whisperTo = whisperStr[1];
+            var keys = Object.keys(people);
+            if (keys.length != 0) {
+              for (var i = 0; i<keys.length; i++) {
+                if (people[keys[i]].name === whisperTo) {
+                  var whisperId = keys[i];
+                  found = true;
+                  if (socket.id === whisperId) { //can't whisper to ourselves
+                    socket.emit("update", "You can't whisper to yourself.");
+                  }
+                  break;
+                } 
+              }
+            }
+            if (found && socket.id !== whisperId) {
+              var whisperTo = whisperStr[1];
+              var whisperMsg = whisperStr[2];
+              console.log(whisperTo + " gets whispered: " + whisperMsg);
+              socket.emit("whisper", {name: "You"}, whisperMsg);
+              io.sockets.socket(whisperId).emit("whisper", people[socket.id], whisperMsg);
+            } else {
+              socket.emit("update", "Can't find " + whisperTo);
+            }
+          }
       }else{
-          rooms[data.roomid].pinPost(data);
-    }
-      console.log(rooms[data.roomid]);
-      utils.sendToAllClientsInRoom(io,  data.roomid, 'roomPosts',
+        rooms[data.roomid].pinPost(data);
+      }
+      // console.log(rooms[data.roomid]);
+      if(!whisper){
+        //push post onto array of posts for particular room
+        rooms[data.roomid].addPost(data);
+        utils.sendToAllClientsInRoom(io,  data.roomid, 'roomPosts',
         {
             room : data.roomid,
             posts : rooms[data.roomid].posts,
             pinnedPosts : rooms[data.roomid].pinnedPosts
         });
+      }
   });
 
   socket.on('disconnect', function() {
-    if(people[socket.id] !== null){
+    if(people[socket.id] != null){
         var user = people[socket.id];
         user.rooms.forEach(function(e){
           rooms[e].removePerson(user.name);

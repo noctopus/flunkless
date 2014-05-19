@@ -19,7 +19,7 @@ Room.prototype.addPerson = function(personID) {
 
 Room.prototype.setCategory = function(category){
   this.category = category;
-}
+};
 
 Room.prototype.removePerson = function(personID){
   this.people = this.people.filter(function(e){
