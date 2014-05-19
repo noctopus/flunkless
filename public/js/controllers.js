@@ -133,6 +133,8 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   }
 
   $scope.addedInRoom = function(item){
+    //why did you remove this from previous commit?
+    //return $scope.currentRooms.indexOf(item) < 0;
     return true;
   }
 
