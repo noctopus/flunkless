@@ -162,7 +162,8 @@ function loadFBInfo(user, fbinfo, socket){
   });
 
   socket.on('disconnect', function() {
-    if(people[socket.id] !== null){
+    if(people[socket.id] != null){
+      console.log(people[socket.id]);
         var user = people[socket.id];
         user.rooms.forEach(function(e){
           rooms[e].removePerson(user.name);

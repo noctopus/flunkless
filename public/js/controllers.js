@@ -133,7 +133,7 @@ function ChatAppCtrl($scope, $q, $modal, socket) {
   }
 
   $scope.addedInRoom = function(item){
-    return $scope.currentRooms.indexOf(item) < 0;
+    return true;
   }
 
   $scope.addRoom = function(room){

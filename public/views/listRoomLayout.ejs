@@ -13,7 +13,7 @@
           </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="room in rooms | filter:roomname | filter: addedInRoom" ng-cloak>
+        <tr ng-repeat="room in rooms | filter : {name : roomname} | filter: addedInRoom" ng-cloak>
       		<td class="table-list" ng-click='addRoom(room)'>
           			{{ room.name }}
           </td>
