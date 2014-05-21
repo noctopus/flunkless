@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html ng-app="chat">
     <%- include header.ejs %>
-   <body class="metro container" ng-controller="ChatAppCtrl" ng-cloak>
+   <body class="metro" ng-controller="ChatAppCtrl" ng-cloak>
       <%- include navbar.ejs %>
       <!-- Begin page content -->
       <div ng-show="!joined">
           <%- include login.ejs %>
       </div>
-      <div ng-hide="!joined" ng-cloak>
-      <div class="tab-control" data-role="tab-control">
-        <ul class="tabs" id="classtabs">
-          <li ng-class="{'active' : viewPage == 'addroom'}"
-              ng-click='viewPage = "addroom"'><a>Add/Create a Room</a></li>
-        </ul>
+    </div>
+      <div ng-hide="!joined" class="grid" style="margin:auto;" ng-cloak>
 
-        <div class="frames">
+      <div class="row">
+      <div class="span3">
+        <nav class="sidebar light">
+          <ul>
+            <li class="title">Your Rooms</li>
+          </ul>
+          <ul id="classtabs">
+            <li ng-class="{'active' : viewPage == 'addroom'}"
+              ng-click='viewPage = "addroom"'><a>Add/Create a Room</a></li>
+          </ul>
+      </nav>
+      </div>
+      <div class="tab-control span12" data-role="tab-control">
+
+        <div class="frames" style="padding-left: 20px;">
 
           <div id="addroom" ng-show="viewPage == 'addroom'">
             <div ng-show="grid">
@@ -28,8 +38,8 @@
           <div ng-repeat="room in currentRooms">
             <%- include room %>
           </div>
-
         </div>
+      </div>
       </div>
   </div>
         <script src="components/jquery/dist/jquery.js"></script>
